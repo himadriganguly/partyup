@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+	<title>PartyUp <%= yield(:title) %></title>    
+	<%= stylesheet_link_tag "application", media: 'all', 'data-turbolinks-track' => true %> 
+	<%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>  
+	<%= yield(:header) %>
+	<meta content="on" http-equiv="x-dns-prefetch-control">
+	<%= favicon_link_tag '/favicon.ico' %>
+	
+	<meta content="Hire everything for your Event - caterers, bartenders, decorators, photographers & more at a fraction of the cost on India's Largest Outsourcing Marketplace." name="description">
+	<meta content="index, follow" name="robots">
+	
+	<%= csrf_meta_tags %>
+</head>
+<body>
+
+	<!-- Google Tag Manager -->
+	
+	<!-- End Google Tag Manager -->
+	
+	<%= yield %>
+	
+	<%= yield(:footer) %>
+
+</body>
+</html>

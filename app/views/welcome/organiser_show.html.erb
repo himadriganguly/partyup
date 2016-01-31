@@ -1,0 +1,112 @@
+<% page_title = " - #{@organiser.first_name} - Event Organiser"%>
+<% content_for :title, page_title %>
+<%= render(:partial=>"/layouts/navbar") %>
+
+<div class="dashboard">
+	<div class="container">
+		<div class="row">	
+			<div class="col-xs-12">
+				
+				<div class="row">
+					
+					<% if @organiser %>
+					
+					<div class="col-xs-4">
+						
+						<aside>
+							
+							<div class="lightbox-blue author-box">
+																
+								<%= image_tag @organiser.avatar.url(:thumb), :alt=>full_name_object(@organiser) %>
+								
+								<div class="info">									
+									<span class="user-name"><%= full_name_object(@organiser) %></span>
+									<span class="user-relation">Event Organiser</span>
+									<span class="city">City: <%= @organiser.city.name.capitalize %></span>
+									<span class="member-year">Member: Since <%= @organiser.created_at.strftime("%B %Y") %></span>																	
+								</div>
+								
+							</div>	
+							
+							<div class="lightbox-blue">
+								
+								<h3>Share</h3>
+								
+								<!-- AddThis Button BEGIN -->
+								<div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+								<a class="addthis_button_facebook"></a>
+								<a class="addthis_button_twitter"></a>
+								<a class="addthis_button_pinterest_share"></a>
+								<a class="addthis_button_google_plusone_share"></a>
+								<a class="addthis_button_gmail"></a>
+								<a class="addthis_button_compact"></a><a class="addthis_counter addthis_bubble_style"></a>
+								</div>
+								<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5380352177d4110a"></script>
+								<!-- AddThis Button END -->
+								
+							</div>
+													
+						</aside>	
+						
+					</div>
+					
+					<div class="col-xs-8">
+						<div class="lightbox-blue">
+							<div class="dahsboard-right">
+								<div class="row">
+									<div class="col-xs-12">
+										<h2 class="caption">Requests</h2>
+									</div>									
+								</div>	
+								<div class="row">
+									<div class="col-xs-12">
+										<% if @organiser.requests.count > 0 %>
+											<table class="table table-violet-green">
+										    	<thead>
+										        	<tr>
+											          <th>Request Title</th>	
+											          <th>Proposals</th>				          														          
+											        </tr>
+										      	</thead>
+										      	<tbody>
+										      		<% @requests.reverse_each do |request| %>
+										      			<tr>								       
+												        	<td>
+												        		<%= link_to(request.title, {:controller=>'dashboard/requests', :action=>'show', :id=>request.id}, :target=>"_blank") %>				        		
+												          	</td>	
+											          	<td><%= request.proposals.count %></td>													          						         								          	
+											        </tr>	
+										      		<% end %>	       													        														       	
+										      	</tbody>
+										    </table>
+										    <div class="row">
+										    	<div class="col-xs-12">
+													<%= paginate @requests %>
+												</div>
+											</div>
+										<% else %>
+											<div class="bs-callout bs-callout-danger">
+												<h4>No request found.</h4>
+											</div>
+									    <% end %>	    
+									</div>
+								</div>																																
+							</div>
+						</div>
+					</div>
+					
+					<% else %>	
+				
+						<div class="bs-callout bs-callout-danger">
+							<h4>No organiser found.</h4>
+						</div>		
+				
+					<% end %>
+				
+				</div>	
+			</div>							
+		</div>					
+	</div>
+</div>	
+
+<%= render(:partial=>"/layouts/footer") %>

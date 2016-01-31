@@ -1,0 +1,63 @@
+<% page_title = " - Edit Accout Password"%>
+<% content_for :title, page_title %>
+<%= render(:partial=>"/layouts/navbar") %>
+<% content_for :header do %>
+	<%= javascript_include_tag "plugins/jquery-validation/jquery.validate.js", 'data-turbolinks-track' => true %>
+	<%= javascript_include_tag "plugins/jquery-validation/custom-methods.js", 'data-turbolinks-track' => true %>
+<% end %>
+<div class="register">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="register-form passwordretrieve-form">
+					<h3>Change your password</h3>
+					
+					<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, :id=>"passwordRetrieve" }) do |f| %>
+					  <%= devise_error_messages! %>
+					  <%= f.hidden_field :reset_password_token %>
+					
+					  <div>
+					  	<%= f.label :password, "New password" %><br />
+					    <%= f.password_field :password, autofocus: true, autocomplete: "off", :id=>"password", :class=>"password", required: true %><br />
+					    <label style="display: none;" for="password" class="error"></label>
+					  </div>
+					
+					  <div>
+					  	<%= f.label :password_confirmation, "Confirm new password" %><br />
+					    <%= f.password_field :password_confirmation, autocomplete: "off", :id=>"confirmpassword", :class=>"confirmpassword", required: true %><br />
+					    <label style="display: none;" for="confirmpassword" class="error"></label>
+					  </div>
+					
+					  <div><%= f.submit "Change my password", class: "btn btn-danger" %></div>
+					<% end %>
+					
+					<%= render "devise/shared/links" %>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<%= render(:partial=>"/layouts/footer") %>
+
+<% content_for :footer do %> 
+        
+	<%= javascript_tag do %>
+		
+		//Forgot Password Form Validation		
+		$( "#passwordRetrieve" ).validate();
+		
+		$(".password").rules("add", {
+			minlength: 8,	
+		});
+		
+		$(".confirmpassword").rules('add', {
+        	equalTo: ".password",        	
+        	messages: {
+				equalTo: "Passwords do not match"					
+			}
+    	});		
+		
+	<% end %>	
+			
+<% end %>

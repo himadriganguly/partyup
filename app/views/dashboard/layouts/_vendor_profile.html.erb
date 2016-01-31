@@ -1,0 +1,225 @@
+<% content_for :header do %>
+	<%= stylesheet_link_tag "bootstrap-tagsinput/bootstrap-tagsinput.css", media: 'all', 'data-turbolinks-track' => true %>
+	
+	<%= stylesheet_link_tag "bootstrap3-wysihtml5/bootstrap3-wysihtml5.min.css", media: 'all', 'data-turbolinks-track' => true %>	
+	
+	<%= javascript_include_tag "plugins/jquery-validation/jquery.validate.js", 'data-turbolinks-track' => true %>
+	<%= javascript_include_tag "plugins/jquery-validation/additional-methods.js", 'data-turbolinks-track' => true %>
+	<%= javascript_include_tag "plugins/jquery-validation/custom-methods.js", 'data-turbolinks-track' => true %>
+	
+	<%= javascript_include_tag "plugins/jquery-inputmask/jquery.inputmask.js", 'data-turbolinks-track' => true %>	
+	<%= javascript_include_tag "plugins/jquery-inputmask/jquery.inputmask.extensions.js", 'data-turbolinks-track' => true %>
+	
+	<%= javascript_include_tag "plugins/bootstrap-tagsinput/bootstrap-tagsinput.js", 'data-turbolinks-track' => true %>
+	
+	<%= javascript_include_tag "plugins/bootstrap3-wysihtml5/bootstrap3-wysihtml5.all.min.js", 'data-turbolinks-track' => true %>	
+<% end %>
+<div class="row">
+	<div class="col-xs-9">
+		<h2 class="caption">Edit Profile</h2>
+	</div>													
+	<div class="col-xs-3">
+		<%= link_to("View Profile",vendor_details_path(@user.username), :target=>"_blank", :class=>"viewprofile") %>		
+	</div>													
+</div>	
+<div class="row">
+	<div class="col-xs-12">		
+		
+		<% if session[:update_errors].present? %>	
+			<div class="alert alert-danger alert-dismissable" style="margin-right: 15px;">
+		  		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		  		<strong><%=pluralize(session[:update_errors].count, "error")%> prevent updating the profile</strong><br/>
+		  		<p>There were problems with the following fields:</p>
+		  		<% session[:update_errors].each do |msg| %>
+		  			<strong><%= msg %></strong><br/>								  	
+		  		<% end %>
+			</div>
+		<% end %>
+		<% session.delete(:update_errors) %>	
+				
+		<%= form_for @user, url: {action: "update_profile"}, :html => { :method => :patch, :id=>"editProfile", :class=>"editform", :multipart => true } do |f| %>
+		
+			<div class="row">
+				<div class="col-xs-6">
+					<%= f.label :password %>
+					<%= f.password_field :password, autocomplete: "off", :placeholder=>"Enter Password", :class=>"password" %>
+					
+				</div>
+				<div class="col-xs-6">
+					<%= f.label :password_confirmation %>
+					<%= f.password_field :password_confirmation, autocomplete: "off", :placeholder=>"Confirm Password", :class=>"confirmpassword" %>					
+				</div>
+			</div>		
+			<div class="row">
+				<div class="col-xs-6">
+					<%= f.label :email %>
+					<%= f.email_field :email, :placeholder=>"Enter Email", :required=>true %>
+					
+				</div>
+				<div class="col-xs-6">
+					<%= f.label :mobile %>
+					<%= f.text_field :mobile, :class=>"mobile", :placeholder=>"Mobile", :required=>true %>
+				</div>
+			</div>	
+			
+			<div class="row">
+				<div class="col-xs-12">	
+					<%= f.label :avatar, "Upload Avatar" %>			
+					<%= f.file_field :avatar, :class=> "filetype" %>																						
+				</div>
+			</div>		
+				
+			<%= f.fields_for :vendor_profile do |pf| %>
+			
+				<div class="row">
+					<div class="col-xs-12">					
+						<%= pf.label :about %>
+						<%= pf.text_area :about, :id=> "about", :cols=>"40", :rows=>"8", :placeholder=>"Enter Detail Description" %>					
+					</div>				
+				</div>	
+				<div class="row">
+					<div class="col-xs-12">					
+						<%= pf.label :skills %>
+						<%= pf.text_field :skills, :placeholder=>"Enter your skills and hit enter", :class=>"tags" %>					
+					</div>				
+				</div>	
+				<div class="row">
+					<div class="col-xs-12">
+						<%= pf.label :youtubelink do %>
+							Youtube Video <span class="question popovertip" data-toggle="popover" data-placement="right" data-content="Enter the link of the Youtube video e.g https://www.youtube.com/watch?v=Q76V1LnnwwA."><i class="fa fa-question-circle"></i></span>
+						<% end %>
+						<%= pf.url_field :youtubelink, :required=>false, :placeholder=> "Enter the link of the Youtube video", :id=> "youtubeVideo", :data=>{inputmask: "'alias': 'url'"} %>					
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<%= pf.label :pic1 do %>
+							Upload Picture1 <span class="question popovertip" data-toggle="popover" data-placement="right" data-content="Upload Picture1 of your work to be included in your profile."><i class="fa fa-question-circle"></i></span>
+						<% end %>						
+						<%= pf.file_field :pic1, :class=> "filetype" %>																	
+					</div>
+				</div>	
+				<div class="row">
+					<div class="col-xs-12">
+						<%= pf.label :pic2 do %>
+							Upload Picture2 <span class="question popovertip" data-toggle="popover" data-placement="right" data-content="Upload Picture2 of your work to be included in your profile."><i class="fa fa-question-circle"></i></span>
+						<% end %>						
+						<%= pf.file_field :pic2, :class=> "filetype" %>																	
+					</div>
+				</div>	
+				<div class="row">
+					<div class="col-xs-12">
+						<%= pf.label :pic3 do %>
+							Upload Picture3 <span class="question popovertip" data-toggle="popover" data-placement="right" data-content="Upload Picture3 of your work to be included in your profile."><i class="fa fa-question-circle"></i></span>
+						<% end %>						
+						<%= pf.file_field :pic3, :class=> "filetype" %>																			
+					</div>
+				</div>	
+				<div class="row">
+					<div class="col-xs-12">
+						<%= pf.label :pic4 do %>
+							Upload Picture4 <span class="question popovertip" data-toggle="popover" data-placement="right" data-content="Upload Picture4 of your work to be included in your profile."><i class="fa fa-question-circle"></i></span>
+						<% end %>						
+						<%= pf.file_field :pic4, :class=> "filetype" %>																		
+					</div>
+				</div>	
+							
+			<% end %>	
+								
+			<div class="row">
+				<div class="col-xs-12">
+					<%= f.submit "Update Profile", :class=>"btn btn-success" %>					
+				</div>
+			</div>																									
+		<% end %>
+	</div>
+</div>
+
+<% content_for :footer do %>  
+        
+	<%= javascript_tag do %>
+		
+		//Request Form Validation		
+		$( "#editProfile" ).validate();	
+						
+		$("#youtubeVideo").rules('add', {
+			required: function(element) {
+				return element.value.length > 0;				
+			},	
+			youtubeVideo: true	
+		});	
+		
+		$(".password").rules("add", {
+			minlength: 8,	
+		});
+		
+		$(".confirmpassword").rules('add', {
+        	equalTo: ".password",        	
+        	messages: {
+				equalTo: "Passwords do not match"					
+			}
+    	});	
+    	
+    	$("input.mobile").rules('add',{
+			indian_mobile: true
+		});
+    	
+    	//Filetype Validation
+		$(".filetype").each(function() {
+			$(this).rules('add', {            	
+        		extension: "jpg|jpeg|png",
+        		messages: {
+					extension: "Please specify valid image type such as .jpeg,.jpg,.png"					
+				}
+    		});	
+		});
+    					
+		//Indian Mobile Number Inputmask
+		$("input.mobile").inputmask("(+\\91)-99999-99999");			
+		mob_val = $("input.mobile").attr('value');
+		$("input.mobile").val(mob_val);
+		
+		//Tagsinput
+	    $('input.tags').tagsinput({
+			maxTags: 10				 
+		});			
+    	
+    	$("input#youtubeVideo").inputmask();
+    	
+    	
+    	//WYSIWYG
+		var myCustomTemplates = {
+		  lists : function(locale) {
+		    return "<li>"+
+				   "<div class='btn-group'>"+
+				   "<a class='btn btn-default' data-wysihtml5-command='insertUnorderedList' title='Unordered list' tabindex='-1'><span class='glyphicon glyphicon-list'></span></a>"+
+				   "<a class='btn btn-default' data-wysihtml5-command='insertOrderedList' title='Ordered list' tabindex='-1'><span class='glyphicon glyphicon-th-list'></span></a>"+					   
+				   "</div>"+
+				   "</li>";
+		  }			 
+		};
+					
+		var wysihtml5ParserRules = {
+			tags: {
+		    	"a": {
+		      		"check_attributes": {
+		        		"href": "url" // make sure the entered url is really an url
+		      		},
+			      	"set_attributes": {
+			        	"rel": "nofollow",   // optional
+			        	"target": "_blank"   // optional
+			      	}
+		    	}
+		  	}
+		};
+
+		$('#about').wysihtml5({	
+			customTemplates: myCustomTemplates,
+			useLineBreaks: false,		
+			image: false,
+			parserRules: wysihtml5ParserRules,				
+		});   	
+    			
+	<% end %>	
+			
+<% end %>

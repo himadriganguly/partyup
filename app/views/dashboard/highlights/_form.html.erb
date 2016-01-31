@@ -1,0 +1,73 @@
+<% content_for :header do %>	
+	<%= stylesheet_link_tag "bootstrap3-wysihtml5/bootstrap3-wysihtml5.min.css", media: 'all', 'data-turbolinks-track' => true %>	
+		
+	<%= javascript_include_tag "plugins/bootstrap3-wysihtml5/bootstrap3-wysihtml5.all.min.js", 'data-turbolinks-track' => true %>
+	<%= javascript_include_tag "plugins/jquery-validation/jquery.validate.js", 'data-turbolinks-track' => true %>	
+<% end %>
+<div class="row">
+	<div class="col-xs-12">
+		<%= f.label :title do %>
+			Title <span class="question popovertip" data-toggle="popover" data-placement="right" data-content="Add a title within 25 characters."><i class="fa fa-question-circle"></i></span>
+		<% end %>
+		<%= f.text_field :title, :placeholder=>"Enter Highlight Title", :class=> "highlightTitle", :required=>true %>													
+	</div>																
+</div>	
+<div class="row">
+	<div class="col-xs-12">
+		<%= f.label :description do %>
+			Description <span class="question popovertip" data-toggle="popover" data-placement="right" data-content="Add some short description about topic you want to highlight about your specialities and expertise. You can also include link to sites to showcase your highlight."><i class="fa fa-question-circle"></i></span>
+		<% end %>
+		<%= f.text_area :description, :id=>"desc", :placeholder=>"Enter Description", :cols=>40, :rows=>8, :required=>true %>													
+	</div>
+</div>
+
+<% content_for :footer do %>  
+        
+	<%= javascript_tag do %>
+		
+		$("#addHighlightForm").validate();
+		
+		$("#addHighlightForm input.highlightTitle").rules('add', {
+        	maxlength: 25,
+        	messages: {
+				maxlength: "Title must be within 25 characters"					
+			}
+	    });	
+    	
+    	//WYSIWYG
+			var myCustomTemplates = {
+			  lists : function(locale) {
+			    return "<li>"+
+					   "<div class='btn-group'>"+
+					   "<a class='btn btn-default' data-wysihtml5-command='insertUnorderedList' title='Unordered list' tabindex='-1'><span class='glyphicon glyphicon-list'></span></a>"+
+    				   "<a class='btn btn-default' data-wysihtml5-command='insertOrderedList' title='Ordered list' tabindex='-1'><span class='glyphicon glyphicon-th-list'></span></a>"+					   
+					   "</div>"+
+					   "</li>";
+			  }			 
+			};
+					
+			var wysihtml5ParserRules = {
+				tags: {
+			    	"a": {
+			      		"check_attributes": {
+			        		"href": "url" // make sure the entered url is really an url
+			      		},
+				      	"set_attributes": {
+				        	"rel": "nofollow",   // optional
+				        	"target": "_blank"   // optional
+				      	}
+			    	}
+			  	}
+			};
+
+			$('#desc').wysihtml5({	
+				customTemplates: myCustomTemplates,
+				"blockquote": false,
+				useLineBreaks: false,		
+				image: false,
+				parserRules: wysihtml5ParserRules,							
+			});   	
+    			
+	<% end %>	
+			
+<% end %>

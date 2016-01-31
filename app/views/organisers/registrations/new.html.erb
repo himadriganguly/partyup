@@ -1,0 +1,125 @@
+<% page_title = " - Organiser Resgistration"%>
+<% content_for :title, page_title %>
+<% content_for :header do %>
+	<%= javascript_include_tag "plugins/jquery-validation/jquery.validate.js", 'data-turbolinks-track' => true %>
+	<%= javascript_include_tag "plugins/jquery-inputmask/jquery.inputmask.js", 'data-turbolinks-track' => true %>	
+	<%= javascript_include_tag "plugins/jquery-validation/custom-methods.js", 'data-turbolinks-track' => true %>
+<% end %>
+<%= render(:partial=>"/layouts/navbar") %>
+
+<div class="register">
+					<div class="container">
+						<div class="row">
+							<div class="col-xs-12">
+								<div class="register-form">
+									<div class="left">
+										<div class="inner">
+										
+											<h3>Organiser Registration</h3>
+											
+											<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: {id: "registerForm"}) do |f| %>
+										  		
+										  		<%= error_messages_for(resource) %>
+										  		
+										  		<div>									
+										  			<%= f.text_field :first_name, :class=>"firstname", :required=>true, placeholder: "First Name"%>
+										  		</div>
+										  		
+										  		<div>									
+										  			<%= f.text_field :last_name, :required=>true, placeholder: "Last Name"%>
+										  		</div>
+										  		
+										  		<div>									
+										  			<%= f.email_field :email, :required=>true, placeholder: "Email", title: "Enter your valid email id, confirmation mail will be send to this mail id.", data: {"toggle"=>"tooltip", "placement"=>"top"}%>
+										  		</div>
+										  		
+										  		<div>			
+													<%= f.text_field :mobile, :class=>"mobile", :required=>true, placeholder: "Mobile" %>									
+													<span class="question popovertip" data-toggle="popover" data-placement="right" data-content="We always value your privacy. So your contact number will only be shared with the vendor you want to work with."><i class="fa fa-question-circle"></i></span>
+												</div>
+												
+												<div>									
+										  			<%= f.select :city_id, options_from_collection_for_select(City.order('name ASC'), 'id', :display_name), {:prompt => 'select a city'}, {:required=>true} %>										  			
+										  		</div>	
+										  		
+										  		<div>									
+										  			<%= f.text_field :username, :class=>"username", :required=>true, placeholder: "Username"%>									  			
+										  		</div>
+										
+										  		<div>									  			
+										    		<%= f.password_field :password, autocomplete: "off", :required=>true, placeholder: "Password", :class=>"password" %>
+										    	</div>
+										
+										  		<div>									  			
+										    		<%= f.password_field :password_confirmation, autocomplete: "off", :required=>true, placeholder: "Confirm Password", :class=>"confirmpassword" %>
+										    	</div>
+										    	
+										    	<div style="margin-bottom: 10px;">
+													<%# = recaptcha_tags ajax: true %>
+												</div>
+												
+										  		<div>
+										  			<%= f.submit "Create Account", id: "submit", class: "btn btn-danger" %>
+										  		</div>
+											<% end %>
+											<div>
+												<%= render "devise/shared/links" %>
+											</div>
+										
+										</div>										
+									</div>
+									
+									<div class="right">
+										<div class="inner">
+											<h4>Why organize event through PartyUp?</h4>
+											<ul>
+												<li><i class="fa fa-star"></i> 100% Free to submit Event Requests</li>
+												<li><i class="fa fa-trash-o"></i> Delete the stress of finding the right vendor</li>
+												<li><i class="fa fa-inr"></i> Get quotes from lot of vendors</li>
+												<li><i class="fa fa-thumbs-up"></i> Choose the best vendor</li>
+												<li><i class="fa fa-phone"></i> Let the choosen vendor contact you directly</li>
+											</ul>
+											<h4 class="vendor-register-link">Are you a Vendor? Then Register <%= link_to("here",new_vendor_registration_path) %></h4>
+										</div>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+<%= render(:partial=>"/layouts/footer") %>
+
+<% content_for :footer do %> 
+        
+	<%= javascript_tag do %>
+		
+		//Request Form Validation		
+		$( "#registerForm" ).validate();
+				
+		$("input.mobile").rules('add',{
+			indian_mobile: true
+		});
+				
+		$(".password").rules("add", {
+			minlength: 8,	
+		});
+		
+		$(".confirmpassword").rules('add', {
+        	equalTo: ".password",        	
+        	messages: {
+				equalTo: "Passwords do not match"					
+			}
+    	});	
+    	
+    	$("input.username").rules('add',{
+			username: true
+		});
+				
+		//Indian Mobile Number Inputmask
+		$("input.mobile").inputmask("(+\\91)-99999-99999");	
+		
+	<% end %>	
+			
+<% end %>

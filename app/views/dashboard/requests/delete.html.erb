@@ -1,0 +1,183 @@
+<% page_title = " - Delete Request"%>
+<% content_for :title, page_title %>
+<% content_for :header  do %>
+	<%= stylesheet_link_tag "bootstrap3-wysihtml5/bootstrap3-wysihtml5.min.css", media: 'all', 'data-turbolinks-track' => true %>
+	
+	<%= javascript_include_tag "plugins/bootstrap3-wysihtml5/bootstrap3-wysihtml5.all.min.js", 'data-turbolinks-track' => true %>	
+<% end %>
+<%= render(:partial=>"/layouts/navbar") %>
+
+<div class="dashboard">
+					<div class="container">
+						<div class="row">	
+							<div class="col-xs-12">
+								<div class="row">
+									<div class="col-xs-4">
+										<%= render(:partial=>"dashboard/layouts/leftcolumn") %>	
+									</div>
+									
+									<div class="col-xs-8">
+										<div class="lightbox-blue">
+											<div class="dahsboard-right">
+												<div class="row">
+													<div class="col-xs-12">
+														<h2 class="caption">Delete Request</h2>
+													</div>									
+												</div>	
+												<div class="row">
+													<div class="col-xs-12">
+														
+														<div class="bs-callout bs-callout-danger">
+															<h4>Delete Request</h4>
+															
+															<%= form_for(:request, :url => {:action => 'cancel', :id => @request.id}, :method => :post) do |f| %>
+
+															    <p><strong>Are you sure you want to permanently delete this request?</strong></p>								
+																
+																<div class="row">
+																	<div class="col-xs-12">
+																		<%= f.submit "Delete", :class=>"btn btn-success" %>																	
+																	</div>
+																</div>
+															
+															  <% end %>
+  
+														</div>
+														
+														<div class="delete-form">
+															
+															<div class="row">
+																
+																<div class="col-xs-12">
+																	<%= label(:request, :title, "Request Title") %>
+																	<%= text_field(:request, :title, :value=>@request.title, :disabled=>true) %>
+																</div>
+																
+															</div>	
+															
+															<div class="row">
+																
+																<div class="col-xs-6">
+																	<%= label(:request, :city, "City") %>
+																	<%= text_field(:request, :city, :value=>@request.city.name.upcase, :disabled=>true) %>
+																</div>
+																
+																<div class="col-xs-6">
+																	<%= label(:request, :venue, "Venue Location") %>
+																	<%= text_field(:request, :venue, :value=>@request.venue, :disabled=>true) %>
+																</div>
+																
+															</div>	
+															
+															<div class="row">
+																
+																<div class="col-xs-6">
+																	<%= label(:request, :category, "Category") %>
+																	<%= text_field(:request, :category, :value=>@request.category.name, :disabled=>true) %>
+																</div>
+																
+																<div class="col-xs-6">
+																	<%= label(:request, :hours, "Hours") %>
+																	<div class="input-group">
+																		<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+																		<%= text_field(:request, :hours, :value=>@request.hours.to_s+" hrs", :disabled=>true) %>
+																	</div>	
+																</div>
+																
+															</div>	
+															
+															<div class="row">
+																
+																<div class="col-xs-6">
+																	<%= label(:request, :budget, "Budget") %>
+																	<div class="input-group">
+																		<span class="input-group-addon"><i class="fa fa-inr"></i></span>
+																		<%= text_field(:request, :budget, :value=>@request.budget, :disabled=>true) %>																	
+																	</div>																	
+																</div>
+																
+																<div class="col-xs-6">
+																	<%= label(:request, :guests, "Guests") %>
+																	<div class="input-group">
+																		<span class="input-group-addon"><i class="fa fa-users"></i></span>
+																		<%= text_field(:request, :guests, :value=>@request.guests, :disabled=>true) %>
+																	</div>
+																</div>
+																
+															</div>	
+															
+															<div class="row">
+																
+																<div class="col-xs-6">
+																	<%= label(:request, :date, "Event Date") %>
+																	<div class="input-group">
+																		<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+																		<%= text_field(:request, :date, :value=>@request.date, :disabled=>true) %>																	
+																	</div>																	
+																</div>
+																
+																<div class="col-xs-6">
+																	<%= label(:request, :time, "Event Time") %>
+																	<div class="input-group">
+																		<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+																		<%= text_field(:request, :time, :value=>@request.time.strftime("%I:%M %p"), :disabled=>true) %>
+																	</div>
+																</div>
+																
+															</div>	
+															
+															<div class="row">
+																<div class="col-xs-12">
+																	<%= label(:request, :description, "Description") %>	
+																	<%= text_area(:request, :description, :cols=>40, :rows=>8, :id=>"desc", :value=>sanitized_data(@request.description), :disabled=>true) %>
+																</div>
+															</div>
+															
+														</div>									
+														
+													</div>
+												</div>																						
+											</div>
+										</div>
+									</div>
+								</div>	
+							</div>							
+						</div>					
+					</div>
+				</div>				
+
+<%= render(:partial=>"/layouts/footer") %>
+
+<% content_for :footer do %>  
+    
+	<%= javascript_tag do %>
+				
+		var wysihtml5ParserRules = {
+			tags: {
+		    	"a": {
+		      		"check_attributes": {
+		        		"href": "url" // make sure the entered url is really an url
+		      		},
+			      	"set_attributes": {
+			        	"rel": "nofollow",   // optional
+			        	"target": "_blank"   // optional
+			      	}
+		    	}
+		  	}
+		};
+		
+		$('#desc').wysihtml5({	
+			"font-styles": false, //Font styling, e.g. h1, h2, etc. Default true
+			"emphasis": false, //Italics, bold, etc. Default true
+			"lists": false, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
+			"html": false, //Button which allows you to edit the generated HTML. Default false
+			"link": false, //Button to insert a link. Default true
+			"image": false, //Button to insert an image. Default true,
+			"color": false, //Button to change color of font  
+			"blockquote": false, //Blockquote 
+			parserRules: wysihtml5ParserRules,	 			
+		});		
+			
+	<% end %>	
+			
+<% end %>

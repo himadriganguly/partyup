@@ -1,0 +1,60 @@
+<div class="row">
+	<div class="col-xs-12">
+		<%= link_to("Add Request", new_dashboard_requests_path, :class=>"btn btn-success add-request") %>		
+	</div>									
+</div>	
+
+<div class="row">
+	<div class="col-xs-12">
+		<% if @requests.count > 0 %>
+			<table class="table table-violet-green">
+		    	<thead>
+		        	<tr>
+			          <th>Request Title</th>	
+			          <th>Proposals</th>	
+			          <th>Edit</th>	
+			          
+			          <th>Delete</th>						          														          
+			        </tr>
+		      	</thead>
+		      	<tbody>
+		      		<% @requests.each do |request| %>
+		      			<tr>								       
+				        	<td>
+				        		<%= link_to(request.title, {:controller=>'requests', :action=>'show', :id=>request.id}, :target=>"_blank") %>				        		
+				          	</td>	
+			          	<td><%= request.proposals.count %></td>	
+			          	<% if !(request.cancel?) && (request.date > Time.now.to_date) %>
+				          	<% unless request.vendor_select? %>	
+				          		<td><%= link_to("Edit", {:controller=>'requests', :action=>'edit', :id=>request.id}) %></td>				          		
+				          	<% else %>
+				          		<td colspan="2">Vendor Selected</td>
+				          	<% end %>
+				          	<% unless request.vendor_select? %>	
+				          		<td><%= link_to("Delete", {:controller=>'requests', :action => 'delete', :id => request.id}) %></td>
+				          	<% end %>		
+				    	<% else %>				    		
+			    			<% if request.cancel==1 %>
+			    				<td colspan="2">Time Over</td>
+			    			<% else %>
+			    				<td>Time Over</td>
+			    				<td><%= link_to("Delete", {:controller=>'requests', :action => 'delete', :id => request.id}) %></td>
+			    			<% end %>				    		
+				    	<% end %>			         								          	
+			        </tr>	
+		      		<% end %>	       													        														       	
+		      	</tbody>
+		    </table>
+		<% else %>
+			<div class="bs-callout bs-callout-danger">
+				<h4>No requests found.</h4>
+			</div>
+	    <% end %>	    
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-xs-12">
+		<%= paginate @requests %>
+	</div>
+</div>

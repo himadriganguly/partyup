@@ -1,0 +1,22 @@
+<% content_for :header do %>	
+	<%= javascript_include_tag "plugins/jquery-validation/jquery.validate.js", 'data-turbolinks-track' => true %>    
+<% end %>
+<div class="row">
+	<div class="col-xs-12">		
+		<%= f.label :description, "Enter Clarification Details" %>
+		<span class="question-cursor mypopover" data-toggle="popover" data-placement="top" data-content="If you are a vendor and want to clarify anything from the Event Organiser please enter in details what you want to know more from the Event Organiser. Or if you are a Event Organiser please answer in details the query of the vendor so that they can quote properly."><i class="fa fa-question-circle"></i></span>
+		<%= f.text_area :description, :cols=>"40", :rows=>"8", :required=> true %>		
+		<%= f.submit submit_text, :class=>"btn btn-success" %>	
+	</div>																
+</div>	
+
+<% content_for :footer do %>  
+    
+	<%= javascript_tag do %>
+		
+		//Request Form Validation		
+		$( "#proposalForm" ).validate();		
+		
+	<% end %>	
+			
+<% end %>

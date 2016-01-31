@@ -1,0 +1,109 @@
+<% page_title = " - Delete Highlight"%>
+<% content_for :title, page_title %>
+<% content_for :header  do %>
+	<%= stylesheet_link_tag "bootstrap3-wysihtml5/bootstrap3-wysihtml5.min.css", media: 'all', 'data-turbolinks-track' => true %>
+	
+	<%= javascript_include_tag "plugins/bootstrap3-wysihtml5/bootstrap3-wysihtml5.all.min.js", 'data-turbolinks-track' => true %>	
+<% end %>
+<%= render(:partial=>"/layouts/navbar") %>
+
+<div class="dashboard">
+	<div class="container">
+		<div class="row">	
+			<div class="col-xs-12">
+				<div class="row">
+					<div class="col-xs-4">
+						<%= render(:partial=>"dashboard/layouts/leftcolumn") %>	
+					</div>
+					
+					<div class="col-xs-8">
+						<div class="lightbox-blue">
+							<div class="dahsboard-right">
+								<div class="row">
+									<div class="col-xs-12">
+										<h2 class="caption">Update Highlight</h2>
+									</div>										
+								</div>	
+								<div class="row">
+									<div class="col-xs-12">
+										
+										<div class="bs-callout bs-callout-danger">
+											<h4>Delete Request</h4>
+										
+											<%= form_for(:highlight, :url => {:action => 'destroy', :id => @highlight.id}, :method => :delete) do |f| %>
+	
+											    <p><strong>Are you sure you want to permanently delete this highlight?</strong></p>								
+												
+												<div class="row">
+													<div class="col-xs-12">
+														<%= f.submit "Delete", :class=>"btn btn-success" %>																	
+													</div>
+												</div>
+											
+											  <% end %>  
+										</div>
+										
+										<div class="delete-form">
+											
+											<div class="row">
+												<div class="col-xs-12">
+													<%= label(:highlight, :title, "Highlight Title") %>
+													<%= text_field(:highlight, :title, :value=>@highlight.title, :disabled=>true) %>																								
+												</div>																
+											</div>	
+											<div class="row">
+												<div class="col-xs-12">
+													<%= label(:highlight, :description, "Description") %>
+													<%= text_area(:highlight, :description, :id=>"desc", :value=>@highlight.description, :cols=>40, :rows=>8, :disabled=>true) %>													
+												</div>
+											</div>
+											
+										</div>	
+										
+										
+									</div>
+								</div>																						
+							</div>
+						</div>
+					</div>
+				</div>	
+			</div>							
+		</div>					
+	</div>
+</div>				
+
+<%= render(:partial=>"/layouts/footer") %>
+
+<% content_for :footer do %>  
+    
+	<%= javascript_tag do %>
+				
+		var wysihtml5ParserRules = {
+			tags: {
+		    	"a": {
+		      		"check_attributes": {
+		        		"href": "url" // make sure the entered url is really an url
+		      		},
+			      	"set_attributes": {
+			        	"rel": "nofollow",   // optional
+			        	"target": "_blank"   // optional
+			      	}
+		    	}
+		  	}
+		};
+		
+		$('#desc').wysihtml5({	
+			"font-styles": false, //Font styling, e.g. h1, h2, etc. Default true
+			"emphasis": false, //Italics, bold, etc. Default true
+			"lists": false, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
+			"html": false, //Button which allows you to edit the generated HTML. Default false
+			"link": false, //Button to insert a link. Default true
+			"image": false, //Button to insert an image. Default true,
+			"color": false, //Button to change color of font  
+			"blockquote": false, //Blockquote 
+			parserRules: wysihtml5ParserRules,	 			
+		});		
+			
+	<% end %>	
+			
+<% end %>

@@ -1,0 +1,52 @@
+<% page_title = " - Account Confirmation"%>
+<% content_for :title, page_title %>
+<%= render(:partial=>"/layouts/navbar") %>
+<% content_for :header do %>
+	<%= javascript_include_tag "plugins/jquery-validation/jquery.validate.js", 'data-turbolinks-track' => true %>
+	<%= javascript_include_tag "plugins/jquery-validation/custom-methods.js", 'data-turbolinks-track' => true %>
+<% end %>
+
+<div class="register">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="register-form passwordretrieve-form">
+					
+					<h3>Resend confirmation instructions</h3>
+					
+					<%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post, :id=>"confirmationResend" }) do |f| %>
+					  
+					  <%= devise_error_messages! %>
+					
+					  <div>
+					  	<%= f.label :email %><br />
+					  	<%= f.email_field :email, autofocus: true, :id=>"retrieveEmail", required: true, :placeholder=>"Enter your email" %>
+					  </div>
+					  <label style="display: none;" for="retrieveEmail" class="error"></label>					
+					  				  
+					  <div>
+					  	<%= f.submit "Resend confirmation instructions", class: "btn btn-danger" %>
+					  </div>
+					  
+					<% end %>
+					
+					<%= render "devise/shared/links" %>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<%= render(:partial=>"/layouts/footer") %>
+
+<% content_for :footer do %> 
+        
+	<%= javascript_tag do %>
+		
+		//Forgot Password Form Validation		
+		$( "#confirmationResend" ).validate();	
+		
+	<% end %>	
+			
+<% end %>

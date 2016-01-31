@@ -1,0 +1,68 @@
+<% page_title = " - #{current_vendor.first_name}'s Highlights"%>
+<% content_for :title, page_title %>
+<%= render(:partial=>"/layouts/navbar") %>
+
+<div class="dashboard">
+	<div class="container">
+		<div class="row">	
+			<div class="col-xs-12">
+				<div class="row">
+					<div class="col-xs-4">
+						<%= render(:partial=>"dashboard/layouts/leftcolumn") %>	
+					</div>
+					
+					<div class="col-xs-8">
+						<div class="lightbox-blue">
+							<div class="dahsboard-right">
+								<div class="row">
+									<div class="col-xs-12">														
+										<h2 class="caption">Highlights</h2>
+										<%= link_to("Add Highlight", new_dashboard_highlight_path, :class=>"btn btn-success add-request") %>
+									</div>									
+								</div>	
+								<div class="row">
+									<div class="col-xs-12">
+										<% if @highlight.count > 0 %>
+											<table class="table table-violet-green highlight">
+										    	<thead>
+										        	<tr>
+											          <th><%= pluralize(@highlight.count, "Highlight") %></th>	
+											          <th>Edit</th>
+											          <th>Delete</th>													          														          
+											        </tr>
+										      	</thead>
+										      	<tbody>
+										      		<% @highlight.each do |data| %>
+										      			<tr>								       
+												        	<td>
+												        		<p><strong><%= data.title %></strong></p>
+												        		<p><%= sanitized_data(data.description) %></p>
+												          	</td>	
+												          	<td><%= link_to("Edit", {:action=>'edit', :id=>data.id}) %></td>	
+												          	<td><%= link_to("Delete", {:action => 'delete', :id =>data.id}) %></td>								         								          	
+												        </tr>	
+										      		<% end %>									        														        														       	
+										      	</tbody>
+										    </table>
+									    <% else %>
+											<div class="bs-callout bs-callout-danger">
+												<h4>No highlights found.</h4>
+											</div>
+								    	<% end %>	
+									</div>
+								</div>	
+								<div class="row">
+									<div class="col-xs-12">
+										<%= paginate @highlight %>
+									</div>
+								</div>																					
+							</div>
+						</div>
+					</div>
+				</div>	
+			</div>							
+		</div>					
+	</div>
+</div>				
+
+<%= render(:partial=>"/layouts/footer") %>

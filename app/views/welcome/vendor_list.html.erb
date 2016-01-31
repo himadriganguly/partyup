@@ -1,0 +1,140 @@
+<% page_title = " - Vendors For Hire"%>
+<% content_for :title, page_title %>
+<%= render(:partial=>"/layouts/navbar") %>
+		
+<div class="vendors-list">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-5">
+				<div class="selection-caption">
+					<% if params[:city].present? %>						
+						<h3><%= @category %> in <%= @city.capitalize %></h3>
+					<% else %>						
+						<h3><%= @category %> in <%= @city %></h3>
+					<% end %>					
+				</div>							
+			</div>
+			<div class="col-xs-6 col-xs-offset-1">													
+				<div class="selection-dropdown">					
+					<%= form_tag({action: "vendor_list"}, method: "get") do %>
+						<%= select_tag("category", options_from_collection_for_select(Category.order('name ASC'), 'name', "name"), { include_blank: true, :data=>{toggle: "tooltip"}, :title=> "Select the category" }) %>						
+						<%= select_tag("city", options_from_collection_for_select(City.order('name ASC'), 'name', :display_name), { include_blank: true, :data=>{toggle: "tooltip"}, :title=> "Select the category" }) %>
+						<%= submit_tag "Filter", name: nil, :class=>"btn btn-info" %>													
+					<% end %>					
+				</div>
+			</div>
+		</div>
+		
+		<div class="row">
+			
+			<div class="box-list">
+				<div class="col-xs-12">
+									
+					<% if @vendor.present? && @vendor.count > 0 %>
+					
+						<p class="text-primary"><i class="fa fa-info-circle"></i> Click on the vendor name or image to get more details</p>
+						
+						<% @vendor.each_slice(4) do |row_items| %>							
+							<div class="row">
+								
+								<% row_items.each do |vendor| %>
+								
+									<div class="col-xs-3">								
+										<div class="box">
+											<% if vendor.vendor_profile.pic1.present? %>
+												<%= link_to(image_tag(vendor.vendor_profile.pic1, :class=> "img-responsive"), "/vendors/#{vendor.username}") %>
+											<% else %>
+												<%= link_to(image_tag("image3.jpg", :class=> "img-responsive"), "/vendors/#{vendor.username}") %>
+											<% end %>																				
+											<div class="box-text">
+												<h4><%= link_to(vendor.business_name, "/vendors/#{vendor.username}") %></h4>
+												
+												<% if vendor.vendor_profile.skills.present? %>
+													<span class="tags"><%= vendor.vendor_profile.skills.gsub(',',', ') %></span>
+												<% end %>	
+												
+												<div class="star">
+													<% if vendor.vendor_reviews.count==0%>
+														<%= raw rating_star(0) %>
+														<span>0 review</span>
+													<% else %>
+														<%= raw rating_star(5) %>
+														<span><%= pluralize(vendor.vendor_reviews.count, "review") %></span>
+													<% end %>												
+												</div>
+												<% if organiser_signed_in? %>
+													<%= button_tag("Get Quote", type: 'button', class: "getQuote btn btn-success", data:{"target"=>"#getQuote","id"=>vendor.id}) %>													
+												<% end %>
+											</div>
+										</div>									
+									</div>		
+																
+								<% end %>
+									
+							</div>													
+						<% end %>
+						
+					<% else %>
+						<div class="bs-callout bs-callout-danger">
+							<h4>No vendor found.</h4>
+						</div>				
+					<% end %>
+																			
+				</div>
+				
+				<% if organiser_signed_in? %>
+					<div class="modal fade" id="getQuote" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+					    	<div class="modal-content modal-custom modal-getquote">
+						    	<div class="modal-header">
+							        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							        <h4 class="modal-title" id="myModalLabel">
+							        	<span>Get Quote</span> 
+							        </h4>
+						      	</div>
+					      		<div class="modal-body">
+					      			<% unless current_organiser.requests.count>0 %>
+					      				<p>You don't have any request. Please add a request first.</p>	
+					      			<% else %>	
+					      				<%= form_tag({:controller=>"dashboard/requests", :action=>"vendor_invite"}, {:method=>"post",:class=>"getquote-form"}) do %>
+					      					<%= hidden_field_tag 'vendor_id', :id=>"vendorId" %>	
+					      					<%= label_tag "request", "Choose an existing request" %>
+					      					<div>
+								      			<%= select_tag(:request_id, options_for_select(@requests.map{|request| [request.title.capitalize, request.id]}),{:prompt=>'select a request'}) %>
+												<%= submit_tag("Get Quote", :class=>"btn btn-primary") %>												
+											</div>	
+					      				<% end %>
+							        <% end %>
+					        		<i class="fa fa-plus"></i> <%= link_to("Add New Request",new_dashboard_requests_path) %>								      										       
+					      		</div>
+					      										     
+					    	</div>
+						</div>
+					</div>
+				<% end %>
+				
+			</div>
+			
+		</div>
+		
+		<div class="row">
+			<%= paginate @vendor %>
+		</div>
+		
+	</div>
+</div>	
+				
+<%= render(:partial=>"/layouts/footer") %>
+
+<% content_for :footer do %>  
+        
+	<%= javascript_tag do %>
+	
+		$(".getQuote").click(function(){ // Click to only happen on announce links
+	    	$("#vendor_id").val($(this).data('id'));
+	     	$('#getQuote').modal('show');
+	   	});
+		
+	<% end %>	
+			
+<% end %>

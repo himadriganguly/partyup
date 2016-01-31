@@ -1,0 +1,64 @@
+<% page_title = " - #{current_vendor.first_name}'s Favourite Requests"%>
+<% content_for :title, page_title %>
+<%= render(:partial=>"/layouts/navbar") %>
+
+<div class="dashboard">
+	<div class="container">
+		<div class="row">	
+			<div class="col-xs-12">
+				<div class="row">
+					<div class="col-xs-4">
+						<%= render(:partial=>"dashboard/layouts/leftcolumn") %>	
+					</div>
+					
+					<div class="col-xs-8">
+						<div class="lightbox-blue">
+							<div class="dahsboard-right">
+								<div class="row">
+									<div class="col-xs-12">														
+										<h2 class="caption">Favourites</h2>										
+									</div>									
+								</div>	
+								<div class="row">
+									<div class="col-xs-12">
+										<% if @favourite.count > 0 %>
+											<table class="table table-violet-green">
+										    	<thead>
+										        	<tr>
+											          <th>Request Title</th>	
+											          <th>Proposals</th>											          														          
+											        </tr>
+										      	</thead>
+										      	<tbody>
+										      		<% @favourite.each do |fav| %>
+										      			<tr>								       
+												        	<td>
+												        		<%= link_to(fav.request.title,request_path(fav.request_id), :target=>"_blank") %>	
+												          	</td>	
+												          	<td><%= fav.request.proposals.count %></td>								         								          	
+												        </tr>	
+										      		<% end %>									        														        														       	
+										      	</tbody>
+										    </table>
+									    <% else %>
+											<div class="bs-callout bs-callout-danger">
+												<h4>You have added no Request to your favourite.</h4>
+											</div>
+								    	<% end %>	
+									</div>
+								</div>	
+								<div class="row">
+									<div class="col-xs-12">
+										<%= paginate @favourite %>
+									</div>
+								</div>																					
+							</div>
+						</div>
+					</div>
+				</div>	
+			</div>							
+		</div>					
+	</div>
+</div>				
+
+<%= render(:partial=>"/layouts/footer") %>

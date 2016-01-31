@@ -1,0 +1,57 @@
+	</div>
+
+</section>
+
+<footer>
+			
+	<div class="feedback">
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-7">
+					<span>We’re beta at the moment and we’d love to hear your thoughts</span>
+				</div>
+				<div class="col-xs-2 col-xs-offset-3">
+					<%= link_to "", new_contact_path(reason: "BetaFeedback"), :class=> "feedback-btn", :title=> "Click to give your feedback", :data=> {:toggle=>"tooltip"} %>					
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="footer-nav">
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-5">
+					<nav>
+						<ul>
+							<li>
+								<a href="#">About Us</a>
+							</li>
+							<li>
+								<a href="#">Team</a>
+							</li>
+							<li>
+								<a href="#">FAQ</a>
+							</li>
+							<li>
+								<a href="#">How It Works</a>
+							</li>
+							<li>
+								<%= link_to "Contact", new_contact_path %>								
+							</li>
+						</ul>
+					</nav>
+					<p>Copyright &copy; 2014. All rights reserved</p>
+				</div>
+				<div class="col-xs-3 col-xs-offset-4">
+					<p class="privacy">Our <a href="#">Terms Of Use</a> and <a href="#">Privacy Policy</a></p>
+					<p class="social-links">
+						<a href="#" target="_blank"><i class="fa fa-facebook"></i></a>
+						<a href="#" target="_blank"><i class="fa fa-google-plus"></i></a>
+						<a href="#" target="_blank"><i class="fa fa-twitter"></i></a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</footer>

@@ -1,0 +1,7 @@
+<% if @result %>
+	$('span.fav').html("<%= escape_javascript(link_to "<i class='fa fa-heart'></i> Remove Favourite".html_safe, favourite_path(params[:request_id]), :method=> :delete, remote: true, :class=>"unfav", :data=>{:toggle=>"tooltip", :placement=>"top"}, :title=>"Click to make this Request remove from favourite.") %>");
+<% else %>
+	render( :json => @result.errors.full_messages.to_json, :status => 400 )
+<% end %>
+
+$('span.fav a').tooltip();

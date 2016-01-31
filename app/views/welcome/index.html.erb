@@ -1,0 +1,51 @@
+<% page_title = " - Online Marketplace for Organizing Events"%>
+<% content_for :title, page_title %>
+<%= render(:partial=>"/layouts/navbar") %>
+		
+		<div class="how-it-works">
+			<div class="container">
+				<div class="row">
+					<div class="col-xs-12">
+						<h2 class="rock">How It Works</h2>
+						<div class="col-xs-4 steps">
+							<%= image_tag "icons/icon1.png", :alt=>"Icon1" %>							
+							<h3>Post Your Requirement</h3>
+							<p>Are you searching a DJ for your party or Photgrapher for your wedding? Don’t stress yourself post  any of your requirement and let the vendors give you the quotes.</p>
+						</div>
+						<div class="col-xs-4 steps">
+							<%= image_tag "icons/icon2.png", :alt=>"Icon2" %>
+							<h3>Compare Quotes</h3>
+							<p>Compare the quotes and the quality of the vedors for your event so that your event rocks within your budget.</p>
+						</div>
+						<div class="col-xs-4 steps">
+							<%= image_tag "icons/icon3.png", :alt=>"Icon3" %>
+							<h3>Choose the best</h3>
+							<p>Choose the best vender for your event and let the selected vender contact you directly for further details.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="signup-banner">
+			<div class="container">
+				<div class="row">
+					<h2 class="rock">So what are you waiting for?<br/>Stop stressing and start planning your event.</h2>
+					<%= link_to("Sign Up For Free", new_organiser_session_path, :class=>"btn btn-lg btn-danger")%>					
+				</div>
+			</div>
+		</div>
+		
+		<div class="vendor-signup-banner">
+			<div class="container">
+				<div class="row">
+					<h2 class="rock">Vendors SignUp</h2>
+					<p>Are you an awesome vendor and want to mesmerize<br/>your clients with your service so don’t wait register with us.<br/>Quote on event request that suits your domain, get<br/>selected, serve your client and get paid.</p>
+					<%= link_to("Sign Up For Free", new_vendor_registration_path, :class=>"btn btn-lg btn-danger vaf") %>
+					<%= link_to("Browse Requests", requests_path, :class=>"btn btn-lg btn-danger") %>					
+				</div>
+			</div>
+		</div>
+			
+
+<%= render(:partial=>"/layouts/footer") %>

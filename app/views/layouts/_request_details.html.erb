@@ -1,0 +1,72 @@
+<div class="row">
+	<div class="col-xs-8">
+		<div class="request-header">
+			<h2><%= link_to(@request.title, request_path(@request.id)) %></h2>
+			
+			<div class="toolbar">
+				
+				<% if organiser_signed_in? && !(@request.vendor_select?) && !(@request.cancel) && (@request.date > Time.now.to_date) %>
+					<span class="edit"><a href="#"><i class="fa fa-pencil"></i> <%= link_to("Edit", {:controller=>'dashboard/requests', :action=>'edit', :id=> @request.id}) %></span></a>				
+					<span class="edit"><a href="#"><i class="fa fa-trash-o"></i> <%= link_to("Delete", {:controller=>'dashboard/requests', :action => 'delete', :id=> @request.id}) %></span></a>							
+	          	<% elsif vendor_signed_in? && @fav.present? %>		
+	         		<span class="fav">	
+	         			<% if @fav==0 %>	         			
+		         			<%= link_to favourites_path(:request_id=>@request.id), :method=> :post, remote: true, :class=>"fav", :data=>{:toggle=>"tooltip", :placement=>"top"}, :title=>"Click to make this Request add to your favourite. Favourite Requests can be found on your Dashboard under Favourites." do %>
+		         				 <i class="fa fa-heart"></i> Add to Favourite
+		         			<% end %>
+	         			<% else %>
+	         				<%= link_to favourite_path, :method=> :delete, remote: true, :class=>"unfav", :data=>{:toggle=>"tooltip", :placement=>"top"}, :title=>"Click to make this Request remove from favourite." do %>
+		         				 <i class="fa fa-heart"></i> Remove Favourite
+		         			<% end %>
+	         			<% end %>
+	         		</span> 				
+				<% end %>
+			
+			</div>			
+			
+			<div class="clearfix"></div>
+			
+			<div class="meta-info">
+				<ul>
+					<li class="event-category"><strong>Category:</strong> <%= @request.category.name %></li>
+					<li class="event-budget"><strong>Budget:</strong> <i class="fa fa-inr"></i> <%=  number_with_delimiter(@request.budget) %></li>
+					<li class="event-guests"><strong>Number of Guests:</strong> <%= @request.guests %> Guests</span></li>
+				</ul>
+				<ul>
+					<li class="event-date"><strong>Event Date:</strong> <%= @request.date.strftime("%a, %B %d, %Y") %></li>
+					<li class="event-time"><strong>Event Time:</strong> <%= @request.time.strftime("%I:%M %p") %></li>
+					<li class="event-hours"><strong>Event Hours:</strong> <%= @request.hours %> Hrs</li>
+				</ul>								
+			</div>
+			<div class="venu-info">
+				<span class="venu-city"><strong>Venue City:</strong> <%= @request.city.name.capitalize %></span>
+				<span class="location"><strong>Venue Location:</strong> <%= @request.venue %></span>
+			</div>											
+		</div>
+		<div class="request-description">
+			<p><%= sanitized_data(@request.description) %></p>
+		</div>
+	</div>
+	<div class="col-xs-4">
+		<aside>
+			<div class="lightbox-blue author-box">
+				<%= link_to((image_tag @request.organiser.avatar.url(:thumb), :alt=>full_name_object(@request.organiser)), "/organisers/#{@request.organiser.username}") %>
+				<div class="info">
+					<span class="user-name"><%= link_to(full_name_object(@request.organiser), "/organisers/#{@request.organiser.username}") %></span>
+					<span class="user-relation">Event Organiser</span>									
+					<span class="member-year">Member: Since <%= @request.organiser.created_at.strftime("%B %Y") %></span>	
+					<span class="posted-events"><%= pluralize(@request.organiser.requests.count, "Event") %> Posted</span>												
+				</div>
+			</div>
+			<div class="lightbox-blue">
+				
+				<h3>Share</h3>
+				
+				<!-- AddThis Button BEGIN -->
+				
+				<!-- AddThis Button END -->
+				
+			</div>
+		</aside>
+	</div>
+</div>

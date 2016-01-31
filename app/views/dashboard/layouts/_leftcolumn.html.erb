@@ -1,0 +1,51 @@
+<aside>
+	<div class="lightbox-blue author-box">
+		<% if organiser_signed_in? %>
+			<%= image_tag current_organiser.avatar.url(:thumb), :alt=>full_name_object(current_organiser) %>
+		<% elsif vendor_signed_in? %>
+			<%= image_tag current_vendor.avatar.url(:thumb), :alt=>full_name_object(current_vendor) %>
+		<% end %>
+		<div class="info">
+			<% if organiser_signed_in? %>
+				<span class="user-name"><%= full_name_object(current_organiser) %></span>
+				<span class="user-relation">Event Organiser</span>
+				<span class="city">City: <%= current_organiser.city.name.capitalize %></span>
+				<span class="member-year">Member: Since <%= current_organiser.created_at.strftime("%B %Y") %></span>
+			<% elsif vendor_signed_in? %>
+				<span class="user-name"><%= full_name_object(current_vendor) %></span>
+				<span class="user-relation">Vendor</span>
+				<span class="city">City: <%= current_vendor.city.name.capitalize %></span>
+				<span class="member-year">Member: Since <%= current_vendor.created_at.strftime("%B %Y") %></span>	
+			<% end %>												
+		</div>
+	</div>
+	
+	<div class="lightbox-blue">
+		
+		<h3>Links</h3>
+		<ul class="links">
+			
+			<%= nav_link "Dashboard", authenticated_root_path %>	
+			
+			<% if organiser_signed_in? %>
+							
+				<%= nav_link "Add Request", new_dashboard_requests_path %>	
+			
+			<% end %>			
+			
+			<%= nav_link "Edit Profile", dashboard_profile_path %>
+			
+			<% if vendor_signed_in? %>
+				
+				<%= nav_link "Favourites", dashboard_favourites_path %>					
+
+			<% end %>
+			<% if vendor_signed_in? %>
+				
+				<%= nav_link "Highlights", dashboard_highlights_path %>					
+			
+			<% end %>
+		</ul>
+	</div>
+	
+</aside>	

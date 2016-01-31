@@ -1,0 +1,109 @@
+<% content_for :header do %>	
+
+	<%= javascript_include_tag "plugins/jquery-validation/jquery.validate.js", 'data-turbolinks-track' => true %>
+	<%= javascript_include_tag "plugins/jquery-validation/additional-methods.js", 'data-turbolinks-track' => true %>
+	<%= javascript_include_tag "plugins/jquery-validation/custom-methods.js", 'data-turbolinks-track' => true %>
+	
+	<%= javascript_include_tag "plugins/jquery-inputmask/jquery.inputmask.js", 'data-turbolinks-track' => true %>		
+		
+<% end %>
+<div class="row">
+	<div class="col-xs-9">
+		<h2 class="caption">Edit Profile</h2>
+	</div>													
+	<div class="col-xs-3">
+		<%= link_to("View Profile", organiser_details_path(@user.username), :target=>"_blank", :class=>"viewprofile") %>		
+	</div>													
+</div>	
+<div class="row">
+	<div class="col-xs-12">		
+		
+		<% if session[:update_errors].present? %>	
+			<div class="alert alert-danger alert-dismissable" style="margin-right: 15px;">
+		  		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		  		<strong><%=pluralize(session[:update_errors].count, "error")%> prevent updating the profile</strong><br/>
+		  		<p>There were problems with the following fields:</p>
+		  		<% session[:update_errors].each do |msg| %>
+		  			<strong><%= msg %></strong><br/>								  	
+		  		<% end %>
+			</div>
+		<% end %>
+		<% session.delete(:update_errors) %>	
+				
+		<%= form_for @user, url: {action: "update_profile"}, :html => { :method => :patch, :id=>"editProfile", :class=>"editform", :multipart => true } do |f| %>
+		
+			<div class="row">
+				<div class="col-xs-6">
+					<%= f.label :password %>
+					<%= f.password_field :password, :placeholder=>"Enter Password", :class=>"password" %>
+					
+				</div>
+				<div class="col-xs-6">
+					<%= f.label :password_confirmation %>
+					<%= f.password_field :password_confirmation, :placeholder=>"Confirm Password", :class=>"confirmpassword" %>					
+				</div>
+			</div>		
+			<div class="row">
+				<div class="col-xs-6">
+					<%= f.label :email %>
+					<%= f.email_field :email, :placeholder=>"Enter Email", :required=>true %>
+					
+				</div>
+				<div class="col-xs-6">
+					<%= f.label :mobile %>
+					<%= f.text_field :mobile, :class=>"mobile", :placeholder=>"Mobile", :required=>true %>
+				</div>
+			</div>		
+				
+			<div class="row">
+				<div class="col-xs-12">	
+					<%= f.label :avatar, "Upload Avatar" %>			
+					<%= f.file_field :avatar, :class=> "filetype" %>																						
+				</div>
+			</div>	
+												
+			<div class="row">
+				<div class="col-xs-12">
+					<%= f.submit "Update Profile", :class=>"btn btn-success" %>					
+				</div>
+			</div>																									
+		<% end %>
+	</div>
+</div>
+
+<% content_for :footer do %>  
+        
+	<%= javascript_tag do %>
+		
+		//Request Form Validation		
+		$( "#editProfile" ).validate();	
+		
+		$(".confirmpassword").rules('add', {
+        	equalTo: ".password",
+        	messages: {
+				equalTo: "Passwords do not match"					
+			}
+    	});	
+    	
+    	$("input.mobile").rules('add',{
+			indian_mobile: true
+		});
+    	
+    	//Filetype Validation
+		$(".filetype").each(function() {
+			$(this).rules('add', {            	
+        		extension: "jpg|jpeg|png",
+        		messages: {
+					extension: "Please specify valid image type such as .jpeg,.jpg,.png"					
+				}
+    		});	
+		});
+					
+		//Indian Mobile Number Inputmask
+		$("input.mobile").inputmask("(+\\91)-99999-99999");	
+		mob_val = $("input.mobile").attr('value');
+		$("input.mobile").val(mob_val);
+		
+	<% end %>	
+			
+<% end %>

@@ -1,0 +1,35 @@
+<% content_for :header do %>	
+	<%= javascript_include_tag "plugins/jquery-validation/jquery.validate.js", 'data-turbolinks-track' => true %>    
+<% end %>
+
+<div class="row">
+	<div class="col-xs-6">
+		<div class="input-group">
+			<span class="input-group-addon"><i class="fa fa-inr"></i></span>
+			<%= f.number_field :price, :placeholder=>"Enter Your Proposed Price", :required=>true %>
+		</div>
+		<label style="display: none;" for="proposal_price" class="error"></label>																	
+	</div>
+	<div class="col-xs-6">
+		<%= f.submit submit_text, :class=> "btn btn-success" %>
+	</div>
+</div>	
+
+<div class="row">
+	<div class="col-xs-12">		
+		<%= f.label :description, "Enter Proposal Details" %>	
+		<%= f.text_area :description, :cols=>"40", :rows=>"8", :required=> true %>	
+		<div class="alert alert-info">Describe your proposal in details so that the client get clear understanding of your proposal. The more you describe more your chance of winning the bid.</div>
+	</div>																
+</div>	
+
+<% content_for :footer do %>  
+    
+	<%= javascript_tag do %>
+		
+		//Request Form Validation		
+		$( "#proposalForm" ).validate();		
+		
+	<% end %>	
+			
+<% end %>

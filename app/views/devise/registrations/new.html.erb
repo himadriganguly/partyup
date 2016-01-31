@@ -1,0 +1,67 @@
+<% page_title = " - Register to enjoy"%>
+<% content_for :title, page_title %>
+<% content_for :header do %>       		
+	<!-- Fontawesome CSS -->
+	<%= 
+		#stylesheet_link_tag "register/register.css", media: "all", "data-turbolinks-track" => true 
+	%>			
+<% end %>	
+<%= render(:partial=>"/layouts/navbar") %>
+
+<div class="register">
+					<div class="container">
+						<div class="row">
+							<div class="col-xs-12">
+								<div class="register-form">
+									<div class="left">
+										<div class="inner">
+										
+											<h3>Organiser Registration</h3>
+											
+											<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: {id: "registerForm"}) do |f| %>
+										  		<%= devise_error_messages! %>
+										  		
+										  		<div>									
+										  			<%= f.email_field :email, requires: true, placeholder: "Email"%>
+										  		</div>
+										
+										  		<div>									  			
+										    		<%= f.password_field :password, autocomplete: "off", placeholder: "Password" %>
+										    	</div>
+										
+										  		<div>									  			
+										    		<%= f.password_field :password_confirmation, autocomplete: "off", placeholder: "Confirm Password" %>
+										    	</div>
+												
+										  		<div>
+										  			<%= f.submit "Create Account", id: "submit", class: "btn btn-danger" %>
+										  		</div>
+											<% end %>
+											<div>
+												<%= render "devise/shared/links" %>
+											</div>
+										
+										</div>										
+									</div>
+									
+									<div class="right">
+										<div class="inner">
+											<h4>Why organize event through PartyUp?</h4>
+											<ul>
+												<li><i class="fa fa-star"></i> 100% Free to submit Event Requests</li>
+												<li><i class="fa fa-trash-o"></i> Delete the stress of finding the right vendor</li>
+												<li><i class="fa fa-inr"></i> Get quotes from lot of vendors</li>
+												<li><i class="fa fa-thumbs-up"></i> Choose the best vendor</li>
+												<li><i class="fa fa-phone"></i> Let the choosen vendor contact you directly</li>
+											</ul>
+											<h4 class="vendor-register-link">Are you a Vendor? Then Register <%= link_to("here",new_vendor_registration_path) %></h4>
+										</div>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+<%= render(:partial=>"/layouts/footer") %>

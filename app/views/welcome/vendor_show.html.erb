@@ -1,0 +1,254 @@
+<% page_title = " - #{@vendor.business_name} | #{@vendor.city.name.capitalize}"%>
+<% content_for :title, page_title %>
+<%= render(:partial=>"/layouts/navbar") %>
+<% content_for :header do %>
+	<%= stylesheet_link_tag "flexslider/flexslider.css", media: 'all', 'data-turbolinks-track' => false %>
+	<%= javascript_include_tag "plugins/flexslider/jquery.flexslider.js", 'data-turbolinks-track' => false %>	
+<% end %>		
+<div class="vendor-details">
+	<div class="container">
+		<div class="row">	
+			<div class="col-xs-12">
+				<% if @vendor %>
+				<div class="row">
+					<div class="col-xs-4">
+						<aside>
+							<div class="lightbox-blue author-box">								
+								<%= image_tag @vendor.avatar.url(:thumb), :alt=>full_name_object(@vendor) %>
+								<div class="info">
+									<span class="user-name"><%= full_name_object(@vendor) %></span>
+									<span class="user-relation">Owner</span>
+									<span class="member-year">Member: Since <%= @vendor.created_at.strftime("%B %Y") %></span>
+									<% if organiser_signed_in? && @vendor.confirmed_at!=nil %>
+										<%= button_tag("Get Quote", type: 'button', class: "btn btn-xs btn-success", data:{"toggle"=>"modal","target"=>"#getQuote"}) %>													
+									<% end %>									
+								</div>
+								
+								<% if organiser_signed_in? %>
+									<div class="modal fade" id="getQuote" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+										<div class="modal-dialog">
+									    	<div class="modal-content modal-custom modal-getquote">
+										    	<div class="modal-header">
+											        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+											        <h4 class="modal-title" id="myModalLabel">
+											        	<span>Get Quote</span> 
+											        </h4>
+										      	</div>
+									      		<div class="modal-body">
+									      			<% unless current_organiser.requests.count>0 %>
+									      				<p>You don't have any request. Please add a request first.</p>	
+									      			<% else %>	
+									      				<%= form_tag({:controller=>"dashboard/requests", :action=>"vendor_invite"}, {:method=>"post",:class=>"getquote-form"}) do %>
+									      					<%= hidden_field_tag 'vendor_id', @vendor.id %>	
+									      					<%= label_tag "request", "Choose an existing request" %>
+									      					<div>
+												      			<%= select_tag(:request_id, options_for_select(@requests.map{|request| [request.title.capitalize, request.id]}),{:prompt=>'select a request'}) %>
+																<%= submit_tag("Get Quote", :class=>"btn btn-primary") %>												
+															</div>	
+									      				<% end %>
+											        <% end %>
+									        		<i class="fa fa-plus"></i> <%= link_to("Add New Request",new_dashboard_requests_path) %>								      										       
+									      		</div>
+									      										     
+									    	</div>
+										</div>
+									</div>
+								<% end %>
+								
+							</div>
+							
+							<div class="lightbox-blue">
+								
+								<h3>Share</h3>
+								
+								<!-- AddThis Button BEGIN -->
+								<div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+								<a class="addthis_button_facebook"></a>
+								<a class="addthis_button_twitter"></a>
+								<a class="addthis_button_pinterest_share"></a>
+								<a class="addthis_button_google_plusone_share"></a>
+								<a class="addthis_button_gmail"></a>
+								<a class="addthis_button_compact"></a><a class="addthis_counter addthis_bubble_style"></a>
+								</div>
+								<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5380352177d4110a"></script>
+								<!-- AddThis Button END -->
+								
+							</div>
+							
+							<% if @vendor.highlights.count > 0 %>
+								<div class="lightbox-blue">								
+									<h3>Highlight</h3>
+									
+									<ul class="highlight-list">
+										<% @vendor.highlights.each do |highlight| %>
+											<li>
+												<h4><%= highlight.title %></h4>
+												<div class="description">
+													<p><%= sanitized_data(highlight.description,%w(blockquote)) %></p>
+												</div>						
+											</li>
+										<% end %>
+									</ul>								
+								</div>
+							<% end %>
+							
+						</aside>	
+					</div>
+					<div class="col-xs-8">
+						<div class="lightbox-blue">
+							<div class="vendor-portfolio">
+								
+								<div class="vendor-header">
+									<h2><%= @vendor.business_name %></h2>
+									<div class="meta-info">
+										<span><%= @vendor.city.name.capitalize %></span>
+										<span>Est. <%= @vendor.est_year %></span>
+										<span class="no-border">Category: <%= @vendor.category.name %></span>
+										<div class="star">
+											<% if @vendor.vendor_reviews.count==0%>
+												<%= raw rating_star(0) %>
+												<span>0 review</span>
+											<% else %>
+												<%= raw rating_star(5) %>
+												<span><%= pluralize(@vendor.vendor_reviews.count, "review") %></span>
+											<% end %>
+										</div>
+									</div>
+								</div>
+								
+								<% if @vendor.vendor_profile.about.present?  %>
+									<div class="about">
+										<h4>About</h4>
+										<p><%= sanitized_data(@vendor.vendor_profile.about) %></p>									
+									</div>
+								<% end %>
+								
+								<% if @vendor.vendor_profile.skills.present?  %>
+									<div class="skills-tag">
+										<h4>Skills &amp; Specialities</h4>
+										<div class="clearfix"></div>
+										<div class="tags">
+											<% @vendor.vendor_profile.skills.split(',').each do |skill| %>
+												<span class="label label-info"><%= skill %></span>
+											<% end %>
+										</div>									
+									</div>
+								<% end %>
+								
+								<% if @vendor.vendor_profile.pic1.present? && @vendor.vendor_profile.pic2.present? && @vendor.vendor_profile.pic3.present? && @vendor.vendor_profile.pic4.present? %>
+									<% if @vendor.vendor_profile.pic1.url(:medium) || @vendor.vendor_profile.pic2.url(:medium) || @vendor.vendor_profile.pic3.url(:medium) || @vendor.vendor_profile.pi4.url(:medium) %>
+										<div class="image-gallery">
+											<h4>Image Gallery</h4>
+											<div class="flexslider">
+												<ul class="slides">
+												     <% if @vendor.vendor_profile.pic1.url(:medium) %>
+													    <li data-thumb="<%= @vendor.vendor_profile.pic1.url(:medium) %>">
+													    	<%= image_tag @vendor.vendor_profile.pic1.url(:medium) %>										      	
+													    </li>		
+												    <% end %>		
+												    <% if @vendor.vendor_profile.pic2.url(:medium) %>
+													    <li data-thumb="<%= @vendor.vendor_profile.pic2.url(:medium) %>">
+													    	<%= image_tag @vendor.vendor_profile.pic2.url(:medium) %>										      	
+													    </li>		
+												    <% end %>		
+												    <% if @vendor.vendor_profile.pic3.url(:medium) %>
+													    <li data-thumb="<%= @vendor.vendor_profile.pic3.url(:medium) %>">
+													    	<%= image_tag @vendor.vendor_profile.pic3.url(:medium) %>										      	
+													    </li>		
+												    <% end %>	
+												     <% if @vendor.vendor_profile.pic4.url(:medium) %>
+													    <li data-thumb="<%= @vendor.vendor_profile.pic4.url(:medium) %>">
+													    	<%= image_tag @vendor.vendor_profile.pic4.url(:medium) %>										      	
+													    </li>		
+												    <% end %>									    														    
+											  	</ul>
+											</div>
+										</div>	
+									<% end %>	
+								<% end %>
+								
+								<% if @vendor.vendor_profile.youtubelink.present?  %>
+									<% if @vendor.vendor_profile.youtubelink %>
+										<div class="video">
+											<h4>Video</h4>
+											<iframe width="708" height="430" src="//www.youtube.com/embed/<%= extract_youtube_id(@vendor.vendor_profile.youtubelink) %>" frameborder="0" allowfullscreen></iframe>
+										</div>	
+									<% end %>
+								<% end %>	
+								
+								<% unless @vendor.vendor_profile.present? && (@vendor.vendor_profile.skills.present? || (@vendor.vendor_profile.pic1.present? && @vendor.vendor_profile.pic2.present? && @vendor.vendor_profile.pic3.present? && @vendor.vendor_profile.pic4.present?) || @vendor.vendor_profile.youtubelink.present?) %>
+									<div class="bs-callout bs-callout-danger">
+										<h4>No other details provided by the vendor.</h4>
+									</div>	
+								<% end %>	
+								
+								<% if @vendor.vendor_reviews.count > 0 %>		
+									<div class="reviews">
+										<h4>Reviews &amp; Feedback</h4>
+										<ul class="review-list">
+											<% @vendor.vendor_reviews.each do |review| %>
+												<li>
+													<div class="row">
+														<div class="col-xs-8">
+															<div class="feedback">
+																<h5><%= review.request_title %> at <%= review.request_venue %></h5>
+																<cite>
+																	<span class="name"><%= review.organiser %></span>, <span class="date"><%= time_ago_in_words(review.date) %> ago</span>
+																</cite>
+																<blockquote><%= review.comment %></blockquote>
+															</div>
+														</div>
+														<div class="col-xs-4">
+															<div class="score">
+																<div class="star">
+																	<%= raw rating_star(review.quality) %>														
+																	<span>Quality</span>
+																</div>
+																<div class="star">
+																	<%= raw rating_star(review.service) %>
+																	<span>Service</span>
+																</div>
+															</div>																	
+														</div>
+													</div>
+												</li>
+											<% end %>																					
+										</ul>
+									</div>	
+								<% end %>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<% else %>	
+				
+					<div class="bs-callout bs-callout-danger">
+						<h4>No vendor found.</h4>
+					</div>		
+				
+				<% end %>
+				
+			</div>							
+		</div>					
+	</div>
+</div>	
+				
+<%= render(:partial=>"/layouts/footer") %>
+
+<% content_for :footer do %>  
+        
+	<%= javascript_tag do %>
+		
+		$( document ).ready(function() {
+			//Flexslider
+			$('.flexslider').flexslider({
+				animation: "slide",
+			    controlNav: "thumbnails"
+			});			
+		});
+		
+	<% end %>	
+			
+<% end %>

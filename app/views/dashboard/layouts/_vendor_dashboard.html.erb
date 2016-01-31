@@ -1,0 +1,46 @@
+<div class="row">
+	<div class="col-xs-12">
+		<h2 class="caption">Proposals Submitted</h2>
+	</div>									
+</div>	
+												
+<div class="row">
+	<div class="col-xs-12">
+		<% if @proposals.count > 0 %>
+			<table class="table table-violet-green">
+		    	<thead>
+		        	<tr>
+			          <th>Request Title</th>	
+			          <th>Proposals</th>	
+			          <th>Edit</th>				          						          														          
+			        </tr>
+		      	</thead>
+		      	<tbody>
+		      		<% @proposals.each do |proposal| %>
+		      			<tr>								       
+				        	<td>
+				        		<%= link_to(proposal.request.title, {:controller=>'requests', :action=>'show', :id=>proposal.request.id}, :target=>"_blank") %>				        		
+				          	</td>	
+				          	<td><%= proposal.request.proposals.count %></td>	
+				          	<% unless proposal.request.vendor_select? %>	
+				          		<td><%= link_to("Edit", {:controller=>'/proposals', :action=>'edit', :id=>proposal.id}) %></td>
+				          	<% else %>
+				          		<td>Request Closed</td>
+				          	<% end %>			          						         								          	
+			        	</tr>	
+		      		<% end %>	       													        														       	
+		      	</tbody>
+		    </table>
+		<% else %>
+			<div class="bs-callout bs-callout-danger">
+				<h4>No proposals submitted.</h4>
+			</div>
+	    <% end %>	    
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-xs-12">
+		<%= paginate @proposals %>
+	</div>
+</div>

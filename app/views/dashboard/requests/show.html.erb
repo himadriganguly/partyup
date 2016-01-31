@@ -1,0 +1,207 @@
+<% page_title = " - #{@request.title}"%>
+<% content_for :title, page_title %>
+<%= render(:partial=>"/layouts/navbar") %>
+<% if session[:award_success].present? %>	
+	<div class="alert alert-success">								  		
+  		<%= session[:award_success].html_safe %>					  	
+  	</div>
+<% end %>	
+<% session.delete(:award_success) %>				
+									
+<div class="request">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+								
+				<%= render(:partial=>"/layouts/request_details") %>
+				
+				<div class="row">
+					<div class="proposals">
+						<div class="col-xs-12">							
+							<% if organiser_signed_in? || (vendor_signed_in? && (@request.category_id==current_vendor.category_id) && !(@request.vendor_select?) && (@request.accept_proposal?) && (@request.date > Time.now.to_date))  %>
+								<div class="row">
+									<div class="col-xs-5 div col-xs-offset-7">										
+										<% if @submit==0 %>											
+											<%= link_to("Submit Proposal", "#{@request.id}/proposal", :class=>"btn btn-lg btn-success submit-proposal") %>
+										<% end %>
+										<% if @clarify==1 || (organiser_signed_in? && @request.organiser_id==current_organiser.id && @request.clarifications.count>0) %>
+											<%= link_to("Submit Clarification", new_request_clarification_path,:class=>"btn btn-lg btn-info submit-clarification")%>
+										<% end %>										
+									</div>		
+								</div>
+							<% elsif vendor_signed_in? && (@request.category_id!=current_vendor.category_id) %>
+								<div class="alert alert-info">The Request Category don't match with your Category.</div>
+							<% else %>
+								<% if !(@request.accept_proposal?) %>
+									<div class="alert alert-info">The Request has been paused by the Organiser. Please check back later.</div>								
+								<% end %>
+							<% end %>
+							
+							<% if @request.vendor_select? %>
+								<div class="row">
+									<div class="col-xs-12">
+										<div class="table-awarded-proposal">
+											<table class="table table-green">
+										    	<thead>
+										        	<tr>
+											          <th>Awarded Proposal</th>
+											          <th>Proposed Price</th>														          
+											        </tr>
+										      	</thead>
+										      	<tbody>
+											    	<tr>								       
+											        	<td>
+											        		<div class="vendor-img">
+											        			<%= link_to(image_tag(@winner.vendor.avatar.url(:thumb)), "/vendors/#{@winner.vendor.username}", {:target=>"_blank"}) %>
+											        		</div>
+											        		<div class="proposal-details">
+											        			<div class="toolbar">
+												          			<span class="vendor-info"><%= link_to(full_name_object(@winner.vendor), "/vendors/#{@winner.vendor.username}", {:class=>"green", :target=>"_blank"}) %> of <strong><%= @winner.vendor.business_name %></strong></span>
+												          			<span class="vendor-city"><%= @winner.vendor.city.name.capitalize %></span>															          			
+											          			</div>
+											          			<div class="proposal-desc">
+											          				<i class="fa fa-trophy"></i> Awarded										          				
+											          			</div>
+											        		</div>
+											          	</td>
+											         	<td class="price"><i class="fa fa-inr"></i> <%= number_with_delimiter(@winner.price) %></td>											          	
+											        </tr>	
+											       	
+										      	</tbody>
+										    </table>
+										</div>
+									</div>												
+								</div>
+							<% end %>
+							
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="table-proposal-list">
+										<p class="bg-danger bg-paddding">Before you submit clarification you must submit proposal</p>
+										<table class="table table-violet">
+									    	<thead>
+									        	<tr>
+										          <th><%= pluralize(@request.clarifications.count, "Clarification") %> Submitted</th>														          														          
+										        </tr>
+									      	</thead>
+									      	<tbody>									      		
+									      		<% if @request.clarifications.count > 0 %>
+										      		<% @request.clarifications.reverse.each do |clarification| %>
+										      			<tr>														    								       
+												        	<td>											        		
+												        		<div class="vendor-img">
+												        			<%= link_to(image_tag(clarification.clarify.avatar.url(:thumb)), "/#{clarification.clarify.class.to_s.downcase.pluralize}/#{clarification.clarify.username}", {:target=>"_blank"}) %>
+												        		</div>
+												        		<div class="proposal-details">
+												        			<div class="toolbar">
+													          			<span class="user-name"><%= link_to(full_name_object(clarification.clarify), "/#{clarification.clarify.class.to_s.downcase.pluralize}/#{clarification.clarify.username}", :class=>"violet", :target=>"_blank") %> <% if clarification.clarify.class == Vendor %>of <strong><%= clarification.clarify.business_name %></strong><% end %></span>
+													          			<% if clarification.clarify.class == Vendor %>
+													          				<span class="user-city"><%= clarification.clarify.city.name.capitalize %></span>
+													          			<% end %>
+													          			<span class="user-type">
+													          				<% if clarification.clarify.class == Vendor %>
+													          					<%= clarification.clarify.class %>
+													          				<% else %>
+													          					Event Organiser
+													          				<% end %>
+													          			</span>		
+													          			<span class="date">
+													          				<%= clarification.created_at.to_date.inspect %>
+													          			</span>											          			
+													          			
+												          			</div>
+												          			<div class="proposal-desc">
+												          				<p><%= clarification.description %></p>
+												          			</div>
+												        		</div>
+												          	</td>
+												    	</tr>
+											        <% end %>
+										        <% else %>
+										        	<tr>
+											        	<td>
+											        		<div class="bs-callout bs-callout-danger">
+																<h4>No clarification submitted.</h4>
+															</div>	
+											        	</td>
+											        </tr>
+										        <% end %>
+										        											        														       	
+									      	</tbody>
+									    </table>
+									</div>
+								</div>												
+							</div>
+							
+							<div class="row">
+								<div class="col-xs-12">
+									
+									<div class="table-proposal-list">
+										
+										<table class="table table-violet">
+									    	<thead>
+									        	<tr>
+										          <th><%= pluralize(@request.proposals.count, "Proposal") %> Submitted</th>
+										          <th>Proposed Price</th>														          
+										        </tr>
+									      	</thead>
+									      	<tbody>
+									      		<% if @request.proposals.count > 0 %>
+										      		<% @request.proposals.each do |proposal| %>										      		
+												    	<tr>								       
+												        	<td>												        		
+												        		<div class="vendor-img">
+												        			<%= link_to(image_tag(proposal.vendor.avatar.url(:thumb)), "/vendors/#{proposal.vendor.username}", {:target=>"_blank"}) %>
+												        		</div>												        		
+												        		<div class="proposal-details">
+												        			<div class="toolbar">
+												        				<span class="vendor-info"><%= link_to(full_name_object(proposal.vendor), "/vendors/#{proposal.vendor.username}", {:class=>"violet", :target=>"_blank"}) %> of <strong><%= proposal.vendor.business_name %></strong></span>													          			
+													          			<span class="vendor-city"><%= proposal.vendor.city.name.capitalize %></span>
+													          			
+													          			<% if vendor_signed_in? && !(@request.vendor_select?) && proposal.vendor_id == current_vendor.id %>													          				
+													          				<span class="edit"><%= link_to("Edit", :controller=>"/proposals", :action=>"edit", :id=>proposal.id) %></span>
+													          			<% end %>
+													          			<% if organiser_signed_in? && !(@request.vendor_select?) && @request.organiser_id == current_organiser.id %>													          			
+													          				<span class="award"><%= link_to "Award Project", {:controller=>"/proposals", :action=>"award", :id=>proposal.id}, :method => :put %> </span>
+													          			<% elsif proposal.is_winner? %>
+													          				<span class="award"><strong>Winning Vendor</strong></span>
+													          			<% end %>
+													          			
+												          			</div>
+												          			<div class="proposal-desc">
+												          				<p><%= proposal.description %></p>
+												          			</div>
+												        		</div>
+												          	</td>
+												         	<td class="price"><i class="fa fa-inr"></i> <%= number_with_delimiter(proposal.price) %></td>											          	
+												        </tr>	
+											        <% end %>
+										        <% else %>
+										        	<tr>
+										        		<td colspan="2">
+										        			<div class="bs-callout bs-callout-danger">
+																<h4>No proposal submitted.</h4>
+															</div>	
+										        		</td>
+										        	</tr>
+											   <% end %>											       
+									      	</tbody>
+									    </table>
+									    										    
+									</div>
+									
+								</div>												
+							</div>
+							
+						</div>										
+														
+					</div>
+				</div>
+			</div>							
+		</div>
+								
+	</div>
+</div>
+
+
+<%= render(:partial=>"/layouts/footer") %>

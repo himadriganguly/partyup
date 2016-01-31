@@ -1,0 +1,38 @@
+<% page_title = " - Edit Clarification"%>
+<% content_for :title, page_title %>
+<%= render(:partial=>"/layouts/navbar") %>
+
+<div class="request">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				
+				<%= render(:partial=>"/layouts/request_details") %>
+				
+				<div class="row">
+					<div class="clarifications">
+						<div class="col-xs-12">
+							<div class="proposal-submit">
+								
+								<h3>Submit Clarification</h3>
+								
+								<%= error_messages_for(@clarification) %>
+								
+								<%= form_for(@clarification, url: {:action=> "update", :request_id => @request.id }, html: {:id=>"clarificationForm"}) do |f| %>
+									
+									<%= render(:partial => "form", :locals => {:f => f, :submit_text=>"Update Clarification"}) %>
+										
+								<% end %>
+								
+							</div>
+						</div>										
+														
+					</div>
+				</div>
+			</div>							
+		</div>
+								
+	</div>
+</div>	
+
+<%= render(:partial=>"/layouts/footer") %>

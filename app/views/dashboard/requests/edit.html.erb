@@ -1,0 +1,50 @@
+<% page_title = " - Edit Request"%>
+<% content_for :title, page_title %>
+<%= render(:partial=>"/layouts/navbar") %>
+
+<div class="dashboard">
+					<div class="container">
+						<div class="row">	
+							<div class="col-xs-12">
+								<div class="row">
+									<div class="col-xs-4">
+										<%= render(:partial=>"dashboard/layouts/leftcolumn") %>	
+									</div>
+									
+									<div class="col-xs-8">
+										<div class="lightbox-blue">
+											<div class="dahsboard-right">
+												<div class="row">
+													<div class="col-xs-12">
+														<h2 class="caption">Update Request</h2>
+													</div>									
+												</div>	
+												<div class="row">
+													<div class="col-xs-12">
+														<p class="bg-danger bg-paddding">All fields are required.</p>	
+														<%= error_messages_for(@request) %>
+														
+														<%= form_for(@request, url: {:action=>"update", :id => @request.id}, html: { :id=>"requestForm", :class=>"editform" } ) do |f| %>
+															
+															<%= render(:partial => "dashboard/requests/form", :locals => {:f => f}) %>
+															
+															<div class="row">
+																<div class="col-xs-12">
+																	<%= f.submit "Update Request", :class=>"btn btn-success" %>																	
+																</div>
+															</div>
+																										
+														<% end %>														
+														
+													</div>
+												</div>																						
+											</div>
+										</div>
+									</div>
+								</div>	
+							</div>							
+						</div>					
+					</div>
+				</div>				
+
+<%= render(:partial=>"/layouts/footer") %>

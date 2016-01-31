@@ -1,0 +1,7 @@
+<% if @result %>
+	$('span.fav').html("<%= escape_javascript(link_to "<i class='fa fa-heart'></i> Add to Favourite".html_safe, favourites_path(:request_id=>params[:id]), :method=> :post, remote: true, :class=>'fav', :data=>{:toggle=>"tooltip", :placement=>"top"}, :title=>"Click to make this Request add to your favourite. Favourite Requests can be found on your Dashboard under Favourites.") %>");
+<% else %>
+	render( :json => @result.errors.full_messages.to_json, :status => 400 )
+<% end %>
+
+$('span.fav a').tooltip();

@@ -1,0 +1,196 @@
+<% content_for :header do %>		
+	<%= stylesheet_link_tag "bootstrap3-wysihtml5/bootstrap3-wysihtml5.min.css", media: 'all', 'data-turbolinks-track' => true %>	
+	
+	<%= stylesheet_link_tag "datepicker3/datepicker3.css", media: 'all', 'data-turbolinks-track' => true %> 
+	
+	<%= stylesheet_link_tag "bootstrap-timepicker/bootstrap-timepicker.css", media: 'all', 'data-turbolinks-track' => true %>  
+	
+	<%= javascript_include_tag "plugins/jquery-validation/jquery.validate.js", 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag "plugins/jquery-validation/additional-methods.js", 'data-turbolinks-track' => true %>
+    
+    <%= javascript_include_tag "plugins/bootstrap-datepicker/bootstrap-datepicker.js", 'data-turbolinks-track' => true %>
+    
+    <%= javascript_include_tag "plugins/bootstrap-timepicker/bootstrap-timepicker.js", 'data-turbolinks-track' => true %>  
+    
+	<%= javascript_include_tag "plugins/bootstrap3-wysihtml5/bootstrap3-wysihtml5.all.min.js", 'data-turbolinks-track' => true %>	
+<% end %>
+
+<div class="row">
+																
+	<div class="col-xs-12">
+		<%= f.label :title do %>
+			Request Title <span class="question popovertip" data-toggle="popover" data-placement="right" data-content="Please enter a short descriptive title for the request."><i class="fa fa-question-circle"></i></span>
+		<% end %>
+		<%= f.text_field :title, :placeholder=>"Request Title", :required=>true, :class=> "requestTitle" %>
+	</div>
+	
+</div>
+
+<div class="row">
+	
+	<div class="col-xs-6">	
+		<%= f.label :city_id do %>
+			City <span class="question popovertip" data-toggle="popover" data-placement="right" data-content="Please select the city where the event will be going to happen."><i class="fa fa-question-circle"></i></span>
+		<% end %>	
+		<% if @request.new_record? %>	
+			<%= f.select :city_id, options_from_collection_for_select(City.order('name ASC'), 'id', :display_name, :selected=>@request.city_id), {:prompt => 'select a city'}, {:required=>true} %>
+		<% else %>
+			<%= f.text_field :city_id, {:value=>@request.city.name.upcase,:disabled=>true} %>
+		<% end %>																			
+	</div>
+	
+	<div class="col-xs-6">	
+		<%= f.label :venue do %>
+			Venue Location <span class="question popovertip" data-toggle="popover" data-placement="right" data-content="Please enter the address of the venue or the location."><i class="fa fa-question-circle"></i></span>
+		<% end %>	
+		<%= f.text_field :venue, :placeholder=>"Venue Location", :required=>true %>							
+	</div>
+	
+</div>
+
+<div class="row">
+	
+	<div class="col-xs-6">
+		<%= f.label :category_id do %>
+			Category <span class="question popovertip" data-toggle="popover" data-placement="right" data-content="Select the category for the request."><i class="fa fa-question-circle"></i></span>
+		<% end %>	
+		<% if @request.new_record? %>	
+			<%= f.select :category_id, options_from_collection_for_select(Category.order('name ASC'), 'id', "name", :selected=>@request.category_id), {:prompt => 'select a category'}, {:required=>true} %>
+		<% else %>
+			<%= f.text_field :category_id, {:value=>@request.category.name,:disabled=>true} %>
+		<% end %>	
+	</div>
+	
+	<div class="col-xs-6">
+		<%= f.label :hours do %>
+			Hours <span class="question popovertip" data-toggle="popover" data-placement="right" data-content="Please select an approximation for how many hours the event will be going to happen."><i class="fa fa-question-circle"></i></span>
+		<% end %>
+		<div class="input-group">
+			<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+			<%= f.select :hours, options_for_select((1..24), :selected=>@request.hours), {:prompt => 'select hours'}, {:required=>true} %>
+		</div>	
+		<label style="display: none;" for="request_hours" class="error"></label>																
+	</div>
+	
+</div>
+
+<div class="row">
+	
+	<div class="col-xs-6">
+		<%= f.label :budget do %>
+			Budget <span class="question popovertip" data-toggle="popover" data-placement="right" data-content="Enter your budget for this request."><i class="fa fa-question-circle"></i></span>
+		<% end %>
+		<div class="input-group">
+			<span class="input-group-addon"><i class="fa fa-inr"></i></span>
+			<%= f.number_field :budget, :placeholder=>"Your Budget", :required=>true %>																		
+		</div>
+		<label style="display: none;" for="request_budget" class="error"></label>	
+	</div>
+	
+	<div class="col-xs-6">
+		<%= f.label :guests do %>
+			Guests <span class="question popovertip" data-toggle="popover" data-placement="right" data-content="Enter the total number of guests for the event."><i class="fa fa-question-circle"></i></span>
+		<% end %>																	
+		<div class="input-group">
+			<span class="input-group-addon"><i class="fa fa-users"></i></span>
+			<%= f.number_field :guests, :placeholder=>"Number of Guests", :required=>true %>
+		</div>
+		<label style="display: none;" for="request_guests" class="error"></label>	
+	</div>
+	
+</div>
+
+<div class="row">
+	<div class="col-xs-6">
+		<%= f.label :date do %>
+			Event Date <span class="question popovertip" data-toggle="popover" data-placement="right" data-content="Select the date for the Event."><i class="fa fa-question-circle"></i></span>
+		<% end %>																		
+		<div class="input-group">
+			<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+			<%= f.text_field :date, :placeholder=>"Date", :required=>true, :class=>"datepicker", :data => { 'date-format' => 'mm/dd/yyyy' } %>																		
+		</div>
+		<label style="display: none;" for="request_date" class="error"></label>	
+	</div>
+	<div class="col-xs-6">
+		<%= f.label :time do %>
+			Event Time <span class="question popovertip" data-toggle="popover" data-placement="right" data-content="Select the Event start time."><i class="fa fa-question-circle"></i></span>
+		<% end %>																		
+		<div class="input-group">
+			<span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+			<%= f.text_field :time, :placeholder=>"Time", :required=>true, :class=>"timepicker" %>																		
+		</div>
+		<label style="display: none;" for="request_time" class="error"></label>	
+	</div>
+</div>	
+
+<div class="row">
+	<div class="col-xs-12">
+		<%= f.label :description do %>
+			Description <span class="question popovertip" data-toggle="popover" data-placement="right" data-content="Enter the description of the event so that the vendors can get a clear understanding of your requirement and quote properly."><i class="fa fa-question-circle"></i></span>
+		<% end %>	
+		<%= f.text_area :description, :id=>"desc", :placeholder=>"Enter Description", :cols=>40, :rows=>8, :required=>true %>
+		<label style="display: none;" for="desc" class="error"></label>
+	</div>
+</div>
+
+<% content_for :footer do %>  
+    
+	<%= javascript_tag do %>
+		
+		//Request Form Validation		
+		$( "#requestForm" ).validate();
+		
+		$("input.requestTitle").rules('add', {
+        	maxlength: 25,
+        	messages: {
+				maxlength: "Title must be within 25 characters"					
+			}
+	    });	
+		
+		$('.datepicker').datepicker({
+			format: "yyyy/m/dd",
+			startDate: 'now',
+			autoclose: true
+		});
+		
+		$('.timepicker').timepicker({
+			showInputs: false,
+			//defaultTime: false
+		});
+			
+		//WYSIWYG
+		var myCustomTemplates = {
+		  lists : function(locale) {
+		    return "<li>"+
+				   "<div class='btn-group'>"+
+				   "<a class='btn btn-default' data-wysihtml5-command='insertUnorderedList' title='Unordered list' tabindex='-1'><span class='glyphicon glyphicon-list'></span></a>"+
+				   "<a class='btn btn-default' data-wysihtml5-command='insertOrderedList' title='Ordered list' tabindex='-1'><span class='glyphicon glyphicon-th-list'></span></a>"+					   
+				   "</div>"+
+				   "</li>";
+		  }			 
+		};
+			
+		var wysihtml5ParserRules = {
+			tags: {
+		    	"a": {
+		      		"check_attributes": {
+		        		"href": "url" // make sure the entered url is really an url
+		      		},
+			      	"set_attributes": {
+			        	"rel": "nofollow",   // optional
+			        	"target": "_blank"   // optional
+			      	}
+		    	}
+		  	}
+		};
+		
+		$('#desc').wysihtml5({	
+			useLineBreaks: false,
+			image: false,
+			customTemplates: myCustomTemplates,
+			parserRules: wysihtml5ParserRules,				
+		});		
+		
+	<% end %>	
+			
+<% end %>
